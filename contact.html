@@ -5,11 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Contact — Sushil Khatri</title>
   <meta name="description" content="Contact Sushil for collaboration, jobs, or questions.">
+  <meta name="theme-color" content="#071223">
   <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <header class="site-header">
     <div class="wrap header-inner">
+      <a class="skip-link" href="#main">Skip to main content</a>
       <a class="brand" href="/">Sushil Khatri</a>
       <nav class="nav" role="navigation">
         <button id="nav-toggle-5" aria-expanded="false" aria-controls="nav-list-5" class="nav-toggle">Menu</button>
@@ -18,31 +21,32 @@
           <li><a href="/projects.html">Projects</a></li>
           <li><a href="/publications.html">Publications</a></li>
           <li><a href="/blog.html">Blog / Vlog</a></li>
-          <li><a href="/contact.html" class="btn-outline">Contact</a></li>
+          <li><a href="/contact.html" aria-current="page" class="btn-outline">Contact</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main class="wrap">
+  <main id="main" class="wrap">
     <section class="section">
       <h1>Contact</h1>
       <p class="muted">Best way to reach me is email or LinkedIn. If you prefer, use the form below.</p>
 
       <!-- Simple mailto fallback + formspree integration example -->
       <form id="contact-form" action="https://formspree.io/f/yourformid" method="POST" class="contact-form">
-        <label>
+        <label for="name">
           <span>Name</span>
-          <input type="text" name="name" required>
+          <input id="name" type="text" name="name" autocomplete="name" required>
         </label>
-        <label>
+        <label for="email">
           <span>Email</span>
-          <input type="email" name="email" required>
+          <input id="email" type="email" name="email" autocomplete="email" required>
         </label>
-        <label>
+        <label for="message">
           <span>Message</span>
-          <textarea name="message" rows="6" required></textarea>
+          <textarea id="message" name="message" rows="6" required></textarea>
         </label>
+        <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-5000px;opacity:0" />
         <button class="btn" type="submit">Send message</button>
       </form>
 

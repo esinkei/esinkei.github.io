@@ -106,3 +106,23 @@ body{
 /* small utilities */
 .section{margin:28px 0}
 .container-small{max-width:760px}
+
+/* Focus styles */
+:focus-visible{outline:2px solid var(--accent-2); outline-offset:3px}
+.btn:focus-visible, .link:focus-visible, .nav-toggle:focus-visible, .nav-list a:focus-visible{outline:2px solid var(--accent-2); outline-offset:3px}
+
+/* Active nav */
+.nav-list a[aria-current="page"]{color:var(--text); background:rgba(255,255,255,0.06)}
+
+/* Skip link */
+.skip-link{position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden}
+.skip-link:focus{left:20px; top:10px; width:auto; height:auto; padding:8px 12px; z-index:100; background:var(--accent); color:#02231f; border-radius:8px; outline:none}
+
+/* Reveal animations */
+.reveal-hidden{opacity:0; transform:translateY(8px)}
+.reveal-visible{opacity:1; transform:none; transition:opacity .4s ease, transform .4s ease}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{animation:none !important; transition:none !important}
+}
