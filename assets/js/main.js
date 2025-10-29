@@ -74,4 +74,12 @@
       observer.observe(el);
     });
   }
+
+  // Blog: sort posts newest-first using data-published (ISO date)
+  const postsContainer = document.getElementById('posts');
+  if(postsContainer){
+    const posts = Array.from(postsContainer.querySelectorAll('.post'));
+    posts.sort((a,b) => new Date(b.dataset.published) - new Date(a.dataset.published));
+    posts.forEach(p => postsContainer.appendChild(p));
+  }
 })();
