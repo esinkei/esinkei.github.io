@@ -94,4 +94,28 @@
       try { history.replaceState({}, '', window.location.pathname); } catch(_){}
     }
   }
+  // Copy-to-clipboard for elements with data-copy="#selector"
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-copy]');
+    if(!btn) return;
+    const sel = btn.getAttribute('data-copy');
+    const target = document.querySelector(sel);
+    if(!target) return;
+    const text = target.innerText.trim();
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(() => {
+        const prev = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = prev; }, 1500);
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch(_){}
+      document.body.removeChild(ta);
+      const prev = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = prev; }, 1500);
+    }
+  });
 })();

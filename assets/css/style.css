@@ -163,3 +163,7 @@ body::after{
 
 /* Headings serif */
 h1,h2,h3,h4{font-family: "STIX Two Text", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif}
+
+/* Code blocks / citations */
+pre{background:rgba(255,255,255,0.03); border:1px solid var(--glass); padding:12px; border-radius:8px; overflow:auto}
+.cite{margin-top:8px}
