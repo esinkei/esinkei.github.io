@@ -29,20 +29,32 @@
 
   <main id="main" class="wrap">
     <section class="section">
-      <h1>Blog & Vlog</h1>
-      <p class="muted">Short write-ups and embedded videos.</p>
+      <h1>Blog</h1>
+      <p class="muted">Newest first. Short, practical notes and essays.</p>
 
-      <article class="post">
-        <h2>Entanglement Intuition</h2>
-        <p class="muted">Published Aug 1, 2025 • 6 min</p>
-        <!-- example embedded YouTube -->
-        <div class="video-embed">
-          <iframe width="100%" height="360" src="https://www.youtube.com/embed/VIDEO_ID" title="Entanglement Intuition — YouTube" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <p class="muted">Short description of the video and key takeaways.</p>
-      </article>
+      <div id="posts" class="posts">
+        <article class="post" data-published="2025-10-28">
+          <h2>Error Correction in Classical and Quantum Computing</h2>
+          <p class="muted"><time datetime="2025-10-28">Oct 28, 2025</time> • 7 min</p>
+          <p>Error correction solves the same core problem in both settings: noisy channels flip bits or qubits, and we want reliable computation/communication anyway. Classical codes (parity checks, Hamming, BCH, LDPC) assume discrete errors with simple likelihoods; decoding maps to linear algebra over GF(2).</p>
+          <p>Quantum error correction must respect the no‑cloning theorem and continuous errors. Stabilizer codes (e.g., surface codes, color codes, quantum LDPC) measure commuting checks that reveal error <em>syndromes</em> without collapsing logical information. Noise models matter: Pauli channels simplify analysis; realistic noise mixes dephasing, amplitude damping, and correlated crosstalk.</p>
+          <p>Key ideas in practice: (1) thresholds (below a physical error rate, logical errors fall exponentially with code distance), (2) decoders (minimum‑weight perfect matching, union‑find, belief propagation, ML decoders), and (3) fault tolerance (scheduling, lattice surgery, magic‑state distillation). The analogy: parity checks ↔ stabilizers; Hamming distance ↔ code distance; syndrome decoding ↔ Pauli frame updates.</p>
+        </article>
 
-      <!-- add more posts -->
+        <article class="post" data-published="2025-09-20">
+          <h2>Innovations in Interdisciplinary Work</h2>
+          <p class="muted"><time datetime="2025-09-20">Sep 20, 2025</time> • 5 min</p>
+          <p>Breakthroughs often happen at interfaces: physics × CS for efficient simulation, or finance × ML for robust decision‑making. The common pattern is a translation layer—turning domain constraints into priors, losses, and checks that guide models away from overfitting and toward plausibility.</p>
+          <p>Good practice: define invariants (conservation laws, arbitrage constraints), build quick toy models to test edge cases, and measure impact with counterfactual or walk‑forward protocols. Collaboration works best when artifacts are reproducible: data contracts, seeds, tests, and one‑command reports.</p>
+        </article>
+
+        <article class="post" data-published="2025-08-05">
+          <h2>Barriers in Science in Developing Countries</h2>
+          <p class="muted"><time datetime="2025-08-05">Aug 5, 2025</time> • 6 min</p>
+          <p>Talented students face hurdles beyond raw ability: unreliable infrastructure, limited compute and lab access, paywalled literature, and scarce mentoring networks. The result is slower iteration cycles and fewer visible outputs, despite strong potential.</p>
+          <p>Leverage points: open‑source tooling and preprints, community mentorship, small grants for hardware/connectivity, and institutional partnerships that provide accounts, cloud credits, and travel for conferences. Progress compounds when the iteration loop shortens and visibility increases.</p>
+        </article>
+      </div>
     </section>
   </main>
 
