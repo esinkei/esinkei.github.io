@@ -126,3 +126,7 @@ body{
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{animation:none !important; transition:none !important}
 }
+
+/* Alerts */
+.alert{margin-top:16px; padding:12px; border-radius:8px; border:1px solid var(--glass); background:rgba(255,255,255,0.04); color:var(--text)}
+.alert-success{border-color:rgba(110,231,183,0.4); background:rgba(110,231,183,0.08); color:#eafff7}

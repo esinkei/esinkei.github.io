@@ -82,4 +82,16 @@
     posts.sort((a,b) => new Date(b.dataset.published) - new Date(a.dataset.published));
     posts.forEach(p => postsContainer.appendChild(p));
   }
+
+  // Contact form: show success message if redirected with ?sent=1
+  const params = new URLSearchParams(window.location.search);
+  const formAlert = document.getElementById('form-alert');
+  if(formAlert){
+    if(params.get('sent') === '1'){
+      formAlert.textContent = 'Thanks! Your message has been sent successfully.';
+      formAlert.classList.add('alert-success');
+      formAlert.hidden = false;
+      try { history.replaceState({}, '', window.location.pathname); } catch(_){}
+    }
+  }
 })();

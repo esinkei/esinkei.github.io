@@ -33,7 +33,7 @@
       <p class="muted">Best way to reach me is email or LinkedIn. If you prefer, use the form below.</p>
 
       <!-- Simple mailto fallback + formspree integration example -->
-      <form id="contact-form" action="https://formspree.io/f/yourformid" method="POST" class="contact-form">
+      <form id="contact-form" action="https://formsubmit.co/your.email@example.com" method="POST" class="contact-form">
         <label for="name">
           <span>Name</span>
           <input id="name" type="text" name="name" autocomplete="name" required>
@@ -46,11 +46,18 @@
           <span>Message</span>
           <textarea id="message" name="message" rows="6" required></textarea>
         </label>
-        <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-5000px;opacity:0" />
+        <!-- FormSubmit options -->
+        <input type="hidden" name="_subject" value="New message from sushilkhatri.com">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://sushilkhatri.com/contact.html?sent=1">
+        <!-- Honeypot -->
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-5000px;opacity:0" />
         <button class="btn" type="submit">Send message</button>
       </form>
 
       <p class="muted">Or email: <a href="mailto:your.email@example.com" class="link">your.email@example.com</a></p>
+      <div id="form-alert" class="alert" hidden role="status"></div>
     </section>
   </main>
 
