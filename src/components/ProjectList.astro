@@ -1,0 +1,27 @@
+---
+import { projects } from '../data/projects';
+---
+
+<ol class="entries">
+  {
+    projects.map((p) => (
+      <li class="entry">
+        <div class="entry-head">
+          <h3>{p.title}</h3>
+          {p.date && <p class="entry-date">{p.date}</p>}
+        </div>
+        <p class="entry-note">{p.summary}</p>
+        {p.tags && p.tags.length > 0 && <p class="entry-place">{p.tags.join(' · ')}</p>}
+        {p.links && p.links.length > 0 && (
+          <p class="entry-links">
+            {p.links.map((l) => (
+              <a href={l.href} rel="noopener">
+                {l.label}
+              </a>
+            ))}
+          </p>
+        )}
+      </li>
+    ))
+  }
+</ol>

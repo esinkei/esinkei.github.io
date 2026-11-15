@@ -1,0 +1,45 @@
+---
+import { publications, selfAuthor } from '../data/publications';
+
+interface Props {
+  // Show the BibTeX block with its copy button.
+  bibtex?: boolean;
+}
+
+const { bibtex = false } = Astro.props;
+---
+
+<ol class="pubs">
+  {
+    publications.map((p) => (
+      <li class="pub">
+        <h3>
+          <a href={`https://doi.org/${p.doi}`} rel="noopener">
+            {p.title}
+          </a>
+        </h3>
+        <p class="pub-authors">
+          {p.authors.map((a, i) => (
+            <>
+              {a === selfAuthor ? <strong>{a}</strong> : a}
+              {i < p.authors.length - 1 ? ', ' : ''}
+            </>
+          ))}
+        </p>
+        <p class="pub-venue">
+          <em>{p.venue}</em>, {p.date}. DOI: <a href={`https://doi.org/${p.doi}`} rel="noopener">{p.doi}</a>
+        </p>
+        <p class="pub-summary">{p.summary}</p>
+        {bibtex && (
+          <details class="bibtex">
+            <summary>BibTeX</summary>
+            <pre id={`bibtex-${p.key}`}><code>{p.bibtex}</code></pre>
+            <button class="btn btn-small" type="button" data-copy={`#bibtex-${p.key}`}>
+              Copy BibTeX
+            </button>
+          </details>
+        )}
+      </li>
+    ))
+  }
+</ol>

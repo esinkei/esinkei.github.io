@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import EntryList from '../components/EntryList.astro';
+import PublicationList from '../components/PublicationList.astro';
+import ProjectList from '../components/ProjectList.astro';
+import { profile } from '../data/profile';
+import {
+  education,
+  experience,
+  skills,
+  awards,
+  workshops,
+  organizations,
+  certifications,
+} from '../data/cv';
+import { projects } from '../data/projects';
+import { hasCvPdf } from '../lib/cvPdf';
+---
+
+<Base
+  title="Curriculum Vitae"
+  description={`Curriculum vitae of ${profile.name}: education, experience, publications, skills, and awards.`}
+>
+  <section class="page-head">
+    <h1>Curriculum Vitae</h1>
+    <p class="lede print-only">
+      {profile.name} · {profile.email} · {profile.location}
+    </p>
+    <div class="actions no-print">
+      {
+        hasCvPdf && (
+          <a class="btn btn-primary" href={profile.cvPdf}>
+            Download PDF
+          </a>
+        )
+      }
+      <button class="btn" type="button" id="print-cv">Print</button>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="education">
+    <h2 id="education">Education</h2>
+    <EntryList entries={education} plain rail />
+  </section>
+
+  <section class="section" aria-labelledby="experience">
+    <h2 id="experience">Experience</h2>
+    <EntryList entries={experience} rail />
+  </section>
+
+  {
+    projects.length > 0 && (
+      <section class="section" aria-labelledby="projects">
+        <h2 id="projects">Projects</h2>
+        <ProjectList />
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="publications">
+    <h2 id="publications">Publications</h2>
+    <PublicationList />
+  </section>
+
+  <section class="section" aria-labelledby="skills">
+    <h2 id="skills">Skills</h2>
+    <dl class="skills">
+      {
+        skills.map((s) => (
+          <div>
+            <dt>{s.group}</dt>
+            <dd>{s.items}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="section" aria-labelledby="honors">
+    <h2 id="honors">Honors</h2>
+    <EntryList entries={awards} plain />
+  </section>
+
+  <section class="section" aria-labelledby="workshops">
+    <h2 id="workshops">Workshops and schools</h2>
+    <EntryList entries={workshops} />
+  </section>
+
+  <section class="section" aria-labelledby="leadership">
+    <h2 id="leadership">Leadership</h2>
+    <EntryList entries={organizations} />
+  </section>
+
+  <section class="section" aria-labelledby="certifications">
+    <h2 id="certifications">Certifications</h2>
+    <ul class="certs">
+      {
+        certifications.map((c) => (
+          <li>
+            <span>
+              {c.title} <span class="muted">— Coursera, {c.issuer}</span>
+            </span>
+            <span class="entry-date">{c.date}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<script>
+  document.getElementById('print-cv')?.addEventListener('click', () => window.print());
+</script>

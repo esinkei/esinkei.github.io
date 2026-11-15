@@ -1,0 +1,125 @@
+---
+// An animated single-qubit state on the Bloch sphere.
+// Static geometry is computed here; the script below only moves the state vector.
+const R = 110;
+const AZ = (-28 * Math.PI) / 180; // viewing azimuth
+const EL = (20 * Math.PI) / 180; // viewing elevation
+
+const project = (x: number, y: number, z: number) => {
+  const xr = x * Math.cos(AZ) - y * Math.sin(AZ);
+  const yr = x * Math.sin(AZ) + y * Math.cos(AZ);
+  return { x: R * xr, y: R * (yr * Math.sin(EL) - z * Math.cos(EL)) };
+};
+
+const top = project(0, 0, 1);
+const bottom = project(0, 0, -1);
+const xAxis = project(1, 0, 0);
+const yAxis = project(0, 1, 0);
+const fmt = (n: number) => n.toFixed(1);
+---
+
+<figure class="bloch" data-r={R} data-az={AZ} data-el={EL}>
+  <svg viewBox="-150 -150 300 300" role="img" aria-label="Animated Bloch sphere showing a single qubit state precessing">
+    <defs>
+      <radialGradient id="bloch-fill" cx="38%" cy="32%" r="75%">
+        <stop offset="0%" stop-color="var(--accent-2)" stop-opacity="0.22"></stop>
+        <stop offset="60%" stop-color="var(--accent)" stop-opacity="0.07"></stop>
+        <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.02"></stop>
+      </radialGradient>
+      <linearGradient id="bloch-vec" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="var(--accent)"></stop>
+        <stop offset="100%" stop-color="var(--accent-2)"></stop>
+      </linearGradient>
+    </defs>
+
+    <circle r={R} fill="url(#bloch-fill)" class="bloch-line"></circle>
+    <ellipse rx={R} ry={fmt(R * Math.sin(EL))} class="bloch-line bloch-dash"></ellipse>
+    <ellipse rx={fmt(R * Math.abs(Math.sin(AZ)))} ry={R} class="bloch-line bloch-dash"></ellipse>
+
+    <line x1={fmt(bottom.x)} y1={fmt(bottom.y)} x2={fmt(top.x)} y2={fmt(top.y)} class="bloch-axis"></line>
+    <line x1={fmt(-xAxis.x)} y1={fmt(-xAxis.y)} x2={fmt(xAxis.x)} y2={fmt(xAxis.y)} class="bloch-axis"></line>
+    <line x1={fmt(-yAxis.x)} y1={fmt(-yAxis.y)} x2={fmt(yAxis.x)} y2={fmt(yAxis.y)} class="bloch-axis"></line>
+
+    <text x={fmt(top.x)} y={fmt(top.y - 14)} class="bloch-label" text-anchor="middle">|0⟩</text>
+    <text x={fmt(bottom.x)} y={fmt(bottom.y + 26)} class="bloch-label" text-anchor="middle">|1⟩</text>
+
+    <polyline class="bloch-trail" points=""></polyline>
+    <line class="bloch-vector" x1="0" y1="0" x2="0" y2="0" stroke="url(#bloch-vec)"></line>
+    <circle class="bloch-tip" r="6"></circle>
+    <circle r="3" class="bloch-origin"></circle>
+  </svg>
+  <figcaption>
+    <span class="bloch-state">|ψ⟩ = cos(θ/2)|0⟩ + e<sup>iφ</sup> sin(θ/2)|1⟩</span>
+    <span class="bloch-probs">
+      P(0) = <span data-p0>0.75</span> · P(1) = <span data-p1>0.25</span>
+    </span>
+  </figcaption>
+</figure>
+
+<script>
+  const figure = document.querySelector<HTMLElement>('.bloch');
+  if (figure) {
+    const R = Number(figure.dataset.r);
+    const AZ = Number(figure.dataset.az);
+    const EL = Number(figure.dataset.el);
+    const vector = figure.querySelector<SVGLineElement>('.bloch-vector')!;
+    const tip = figure.querySelector<SVGCircleElement>('.bloch-tip')!;
+    const trail = figure.querySelector<SVGPolylineElement>('.bloch-trail')!;
+    const p0 = figure.querySelector<HTMLElement>('[data-p0]')!;
+    const p1 = figure.querySelector<HTMLElement>('[data-p1]')!;
+
+    const points: string[] = [];
+    let lastReadout = 0;
+
+    const draw = (seconds: number) => {
+      // Precess around the z axis while the polar angle breathes slowly.
+      const theta = Math.PI / 3 + (Math.PI / 7) * Math.sin(seconds * 0.45);
+      const phi = seconds * 0.7;
+      const x = Math.sin(theta) * Math.cos(phi);
+      const y = Math.sin(theta) * Math.sin(phi);
+      const z = Math.cos(theta);
+
+      const xr = x * Math.cos(AZ) - y * Math.sin(AZ);
+      const yr = x * Math.sin(AZ) + y * Math.cos(AZ);
+      const sx = R * xr;
+      const sy = R * (yr * Math.sin(EL) - z * Math.cos(EL));
+
+      vector.setAttribute('x2', sx.toFixed(1));
+      vector.setAttribute('y2', sy.toFixed(1));
+      tip.setAttribute('cx', sx.toFixed(1));
+      tip.setAttribute('cy', sy.toFixed(1));
+
+      points.push(`${sx.toFixed(1)},${sy.toFixed(1)}`);
+      if (points.length > 90) points.shift();
+      trail.setAttribute('points', points.join(' '));
+
+      if (seconds - lastReadout > 0.15 || lastReadout === 0) {
+        lastReadout = seconds;
+        const prob0 = Math.cos(theta / 2) ** 2;
+        p0.textContent = prob0.toFixed(2);
+        p1.textContent = (1 - prob0).toFixed(2);
+      }
+    };
+
+    draw(0.6);
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reducedMotion) {
+      let visible = true;
+      let frame = 0;
+      const tick = (ms: number) => {
+        draw(ms / 1000);
+        frame = visible && !document.hidden ? requestAnimationFrame(tick) : 0;
+      };
+      const resume = () => {
+        if (!frame && visible && !document.hidden) frame = requestAnimationFrame(tick);
+      };
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        resume();
+      }).observe(figure);
+      document.addEventListener('visibilitychange', resume);
+      resume();
+    }
+  }
+</script>

@@ -1,0 +1,45 @@
+---
+import type { Entry } from '../data/cv';
+
+interface Props {
+  entries: Entry[];
+  // Show at most this many detail lines per entry (all when omitted).
+  maxDetails?: number;
+  // Render details as plain text instead of bullets.
+  plain?: boolean;
+  // Draw a timeline rail with a dot beside each entry.
+  rail?: boolean;
+}
+
+const { entries, maxDetails, plain = false, rail = false } = Astro.props;
+---
+
+<ol class:list={["entries", { rail }]}>
+  {
+    entries.map((e) => {
+      const details = maxDetails === undefined ? e.details : e.details?.slice(0, maxDetails);
+      return (
+        <li class="entry">
+          <div class="entry-head">
+            <h3>{e.title}</h3>
+            {e.date && <p class="entry-date">{e.date}</p>}
+          </div>
+          {(e.subtitle || e.location) && (
+            <div class="entry-sub">
+              {e.subtitle && <p class="entry-role">{e.subtitle}</p>}
+              {e.location && <p class="entry-place">{e.location}</p>}
+            </div>
+          )}
+          {details && details.length > 0 && plain && details.map((d) => <p class="entry-note">{d}</p>)}
+          {details && details.length > 0 && !plain && (
+            <ul class="entry-details">
+              {details.map((d) => (
+                <li>{d}</li>
+              ))}
+            </ul>
+          )}
+        </li>
+      );
+    })
+  }
+</ol>

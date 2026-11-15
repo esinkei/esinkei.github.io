@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import PublicationList from '../components/PublicationList.astro';
+import { profile } from '../data/profile';
+---
+
+<Base title="Publications" description={`Peer-reviewed publications by ${profile.name}.`}>
+  <section class="page-head">
+    <h1>Publications</h1>
+  </section>
+
+  <section class="section" aria-labelledby="articles">
+    <h2 id="articles">Journal articles</h2>
+    <PublicationList bibtex />
+  </section>
+</Base>
+
+<script>
+  document.addEventListener('click', async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+    if (!button) return;
+    const source = document.querySelector(button.dataset.copy!);
+    const text = source?.textContent?.trim();
+    if (!text) return;
+
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    } catch {
+      // Older browsers and non-secure contexts: fall back to a hidden textarea.
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      try {
+        copied = document.execCommand('copy');
+      } catch {
+        copied = false;
+      }
+      area.remove();
+    }
+
+    const label = button.textContent;
+    button.textContent = copied ? 'Copied' : 'Copy failed — select the text instead';
+    setTimeout(() => (button.textContent = label), 1800);
+  });
+</script>

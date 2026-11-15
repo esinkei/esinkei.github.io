@@ -1,0 +1,132 @@
+---
+import Base from '../layouts/Base.astro';
+import EntryList from '../components/EntryList.astro';
+import PublicationList from '../components/PublicationList.astro';
+import ProjectList from '../components/ProjectList.astro';
+import BlochSphere from '../components/BlochSphere.astro';
+import { profile } from '../data/profile';
+import { education, experience, awards } from '../data/cv';
+import { projects } from '../data/projects';
+import { hasCvPdf } from '../lib/cvPdf';
+---
+
+<Base>
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow">{profile.eyebrow}</p>
+        <h1><span class="hello">Hi, I’m</span> <span class="name">{profile.name}</span></h1>
+        <p class="lede">{profile.tagline}</p>
+        <div class="actions">
+          {
+            hasCvPdf ? (
+              <a class="btn btn-primary" href={profile.cvPdf}>
+                Download CV
+              </a>
+            ) : (
+              <a class="btn btn-primary" href="/cv/">
+                View CV
+              </a>
+            )
+          }
+          <a class="btn" href={`mailto:${profile.email}`}>Email</a>
+          {profile.github && <a class="btn" href={profile.github} rel="me noopener">GitHub</a>}
+          {profile.linkedin && <a class="btn" href={profile.linkedin} rel="me noopener">LinkedIn</a>}
+        </div>
+      </div>
+      <BlochSphere />
+    </div>
+
+    <dl class="highlights">
+      {
+        profile.highlights.map((h) => (
+          <div class="highlight">
+            <dt>{h.value}</dt>
+            <dd>{h.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="section" aria-labelledby="about">
+    <h2 id="about">About</h2>
+    <div>
+      <div class="prose">
+        {profile.about.map((p) => <p>{p}</p>)}
+      </div>
+      <ol class="journey" aria-label="Where I have studied and worked">
+        {
+          profile.journey.map((j) => (
+            <li>
+              <span class="journey-place">{j.place}</span>
+              <span class="journey-note">{j.note}</span>
+              <span class="journey-years">{j.years}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="interests">
+    <h2 id="interests">Interests</h2>
+    <div>
+      <ul class="tags">
+        {profile.interests.map((i) => <li>{i}</li>)}
+      </ul>
+      <div class="seeking">
+        {
+          profile.seeking.map((s) => (
+            <div>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="education">
+    <h2 id="education">Education</h2>
+    <EntryList entries={education} plain rail />
+  </section>
+
+  <section class="section" aria-labelledby="experience">
+    <h2 id="experience">Experience</h2>
+    <div>
+      <EntryList entries={experience} maxDetails={3} rail />
+      <p class="more"><a href="/cv/">Full CV →</a></p>
+    </div>
+  </section>
+
+  {
+    projects.length > 0 && (
+      <section class="section" aria-labelledby="projects">
+        <h2 id="projects">Projects</h2>
+        <ProjectList />
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="publications">
+    <h2 id="publications">Publications</h2>
+    <PublicationList />
+  </section>
+
+  <section class="section" aria-labelledby="honors">
+    <h2 id="honors">Honors</h2>
+    <EntryList entries={awards} plain />
+  </section>
+
+  <section class="section" aria-labelledby="contact">
+    <h2 id="contact">Contact</h2>
+    <div class="prose">
+      <p>
+        The best way to reach me is by email at
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>. I am based in {profile.location}.
+      </p>
+    </div>
+  </section>
+</Base>

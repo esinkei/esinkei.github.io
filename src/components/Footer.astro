@@ -1,0 +1,17 @@
+---
+import { profile } from '../data/profile';
+---
+
+<footer class="site-footer">
+  <p class="footer-equation" aria-label="The Schrödinger equation">
+    <i>iℏ</i> ∂<sub><i>t</i></sub> |<i>ψ</i>⟩ = <i>Ĥ</i> |<i>ψ</i>⟩
+  </p>
+  <div class="wrap footer-inner">
+    <p>© {new Date().getFullYear()} {profile.name}</p>
+    <ul class="footer-links">
+      <li><a href={`mailto:${profile.email}`}>Email</a></li>
+      {profile.github && <li><a href={profile.github} rel="me noopener">GitHub</a></li>}
+      {profile.linkedin && <li><a href={profile.linkedin} rel="me noopener">LinkedIn</a></li>}
+    </ul>
+  </div>
+</footer>
